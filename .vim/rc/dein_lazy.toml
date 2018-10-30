@@ -1,0 +1,9 @@
+[[plugins]]
+repo = 'thinca/vim-quickrun'
+if = "!has('nvim')"
+
+[[plugins]]
+repo = 'will133/vim-dirdiff'
+
+[[plugins]]
+repo = 'zebult/auto-gtags.vim'

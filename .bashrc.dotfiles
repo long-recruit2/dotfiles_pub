@@ -1,0 +1,172 @@
+export DOTFILES=~/dotfiles
+export INSTALLDIR=$DOTFILES/install
+
+#########################################
+# autocd
+#########################################
+shopt -s autocd
+
+#########################################
+# key bind
+#########################################
+stty werase undef
+stty stop undef
+stty eof undef
+stty stop undef
+bind '"\C-w": unix-filename-rubout'
+bind '"\C-h": backward-char'
+bind '"\C-l": forward-char'
+bind '"\C-b": backward-word'
+bind '"\C-f": forward-word'
+bind '"\C-d": delete-char'
+bind '"\C-s": backward-delete-char'
+
+#########################################
+# alias
+#########################################
+# alias for linux commands
+alias -- -='cd -'
+alias s=source
+alias sb='s ~/.bashrc'
+alias e=env
+alias c=clear
+alias h='history | less +G'
+alias df='df -ah'
+alias ls='ls -lah --color=auto'
+alias l=ls
+alias ll=ls
+alias lsd='ls | grep "^d"' # ls only for directories
+alias lsf='ls | grep "^-"' # ls only for files
+alias lsl='ls | grep "^l"' # ls only for link
+alias p='pwd -P'
+alias pwd='pwd -P'
+alias untar='tar xvzf'
+alias untarb='tar -jxvf'
+alias unbzip2='bzip2 -dk'
+alias md=md5
+alias sha=sha256sum
+
+# alias for vim
+alias v=vim
+alias vi=vim
+alias ide='vim -c IDE'
+
+# alias for nvim
+alias nvim='TERM=xterm-256color; nvim'
+alias n=nvim
+
+# alias for git
+alias ga='git add'
+alias gd='git diff'
+alias gl='git log'
+alias gla='git log --graph --all --decorate'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gpus='git push'
+alias gpul='git pull'
+alias gst='git status'
+alias gco='git commit'
+alias gcom='git commit'
+alias gsh='git show'
+alias gch='git checkout'
+alias gf='git fetch --prune --all'
+alias gr='git remote'
+alias grs='git remote -v'
+alias gra='git remote add'
+alias grr='git remote rm'
+
+# alias for conda
+alias sa='source activate'
+alias sd='source deactivate'
+alias ci='conda info'
+alias cie='conda info --envs | less'
+alias cl='conda list | less'
+alias cs='conda search'
+
+# alias for gtags
+alias tags='gtags -v'
+function rmg() {
+    rm GPATH;
+    rm GRTAGS;
+    rm GTAGS;
+}
+
+# alias for perf
+alias perfsa='perf stat -e cycles,cpu-clock,stalled-cycles-frontend,stalled-cycles-backend,instructions,cache-references,cache-misses,branches,branch-misses,task-clock,faults,minor-faults,page-faults,context-switches,cpu-migrations'
+# removed stalled-cycles-frontend stalled-cycles-backend
+alias perfsa2='perf stat -e cycles,cpu-clock,instructions,cache-references,cache-misses,branches,branch-misses,task-clock,faults,minor-faults,page-faults,context-switches,cpu-migrations'
+
+# alias for ctags
+alias ctags='ctags -R'
+
+# alias for performance
+alias top='top -d1'
+alias vmstat='vmstat -SM'
+alias iostat='iostat -mx'
+alias cachegrind='valgrind --tool=cachegrind'
+alias d='\dmesg | less +G'
+alias dmesg=d
+# alias for dstat
+alias dstat-full='dstat -Tclmdrn'
+alias dstat-mem='dstat -Tclm'
+alias dstat-cpu='dstat -Tclr'
+alias dstat-net='dstat -Tclnd'
+alias dstat-disk='dstat -Tcldr'
+
+# alias for others
+alias now='date'
+alias jmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+#########################################
+# function
+#########################################
+
+# cd up to n dirs
+# using:  cd.. 10   cd.. dir
+function up() {
+  case $1 in
+    *[!0-9]*)                                          # if no a number
+      cd $( pwd | sed -r "s|(.*/$1[^/]*/).*|\1|" )     # search dir_name in current path, if found - cd to it
+      ;;                                               # if not found - not cd
+    *)
+      cd $(printf "%0.0s../" $(seq 1 $1));             # cd ../../../../  (N dirs)
+    ;;
+  esac
+}
+
+# usage: repeat 1 'cat /proc/<PID>/status'
+function repeat() {
+    watch --differences -n $1 $2
+}
+
+# copy cmake database from somewhere in subdirectories.
+function cmakedb() {
+  if [ -e compile_commands.json ]; then
+    rm compile_commands.json
+  fi
+  find . -name compile_commands.json | xargs ln -s
+  echo 'compilation_database = "./"' > .clang
+}
+
+#########################################
+# source
+#########################################
+
+source $DOTFILES/install/bashmarks.sh
+
+#########################################
+# path
+#########################################
+
+export LD_LIBRARY_PATH=$DOTFILES/install/lib:$LD_LIBRARY_PATH
+export PATH=$DOTFILES/install/bin:$PATH
+
+#########################################
+# key bind
+#########################################
+
+#if type xmodmap 2>/dev/null 1>dev/null
+if hash xmodmap 2>/dev/null
+then
+  xmodmap $DOTFILES/.xmodmaprc
+fi

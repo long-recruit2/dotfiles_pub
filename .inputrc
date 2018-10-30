@@ -1,0 +1,5 @@
+# ignore case for bash
+$if Bash
+set completion-ignore-case on
+$endif
+

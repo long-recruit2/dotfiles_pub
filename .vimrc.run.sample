@@ -1,0 +1,10 @@
+let g:quickrun_config["build"] = {
+\    'command'   : './new_build.sh',
+\}
+let g:quickrun_config["gridbuild"] = {
+\    'command'   : './grid_build.sh',
+\}
+
+nnoremap BB :QuickRun build<CR>
+nnoremap BG :QuickRun gridbuild<CR>
+

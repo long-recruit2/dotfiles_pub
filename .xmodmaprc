@@ -1,0 +1,4 @@
+! use xev to know key code for each key
+keycode 100 = Return
+keycode 102 = Control_L
+add control = Control_L
