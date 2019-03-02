@@ -3,17 +3,13 @@
 . ./installer.sh "$@"
 
 install_autoconf() {
-  if [ ! -d "${work_dir}/autoconf" ]; then
-    git clone http://git.sv.gnu.org/r/autoconf.git
-    cd autoconf
-    #git checkout AUTOCONF-2.61
-    git checkout v2.69
+  if [ ! -d "${work_dir}/autoconf-2.69" ]; then
+  cd ${work_dir}
+	wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz --no-check-certificate
+    tar -zxvf autoconf-2.69.tar.gz
+	cd autoconf-2.69
   else
-    cd "${work_dir}/autoconf"
-    #git checkout AUTOCONF-2.61
-    git checkout v2.69
-    git fetch --prune
-    git pull --prune
+    cd "${work_dir}/autoconf-2.69"
   fi
   ./configure --prefix=$install_dir
   make -j $CORE
@@ -33,4 +29,5 @@ install_autoconf2() {
   make install && make clean
 }
 
-main install_autoconf2
+main install_autoconf
+#main install_autoconf2
